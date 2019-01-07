@@ -1,4 +1,4 @@
-package io.esuau.bigdata.twitter2graph.definition;
+package io.esuau.bigdata.twitter2graph.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Node extends Element {
-    private NodeData data;
+public class Edge extends Element {
+    private EdgeData data;
 }
