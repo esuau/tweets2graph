@@ -1,8 +1,6 @@
 package io.esuau.bigdata.twitter2graph.operation;
 
-import io.esuau.bigdata.twitter2graph.entity.Edge;
 import io.esuau.bigdata.twitter2graph.entity.EdgeData;
-import io.esuau.bigdata.twitter2graph.entity.Node;
 import io.esuau.bigdata.twitter2graph.entity.NodeData;
 import io.esuau.bigdata.twitter2graph.repository.EdgeRepository;
 import io.esuau.bigdata.twitter2graph.repository.NodeRepository;
@@ -14,10 +12,12 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
 import twitter4j.User;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Slf4j
 @Service
+@Transactional
 public class TweetProcessor {
 
     private final EdgeRepository edgeRepository;

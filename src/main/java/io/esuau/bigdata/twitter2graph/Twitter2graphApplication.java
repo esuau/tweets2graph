@@ -13,7 +13,7 @@ import java.io.File;
 public class Twitter2graphApplication {
 
 	public static void main(String[] args) throws Exception {
-		ApplicationContext ctx = SpringApplication.run(Twitter2graphApplication.class, args);
+		ApplicationContext ctx = SpringApplication.run(Twitter2graphApplication.class);
 
 		if (args.length == 0 || args[0] == null) {
 			throw new Exception("No file provided.");
