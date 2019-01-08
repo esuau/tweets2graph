@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "nodes")
+@Table(name = "nodes", schema = "graph")
 public class NodeData {
 
     @Id

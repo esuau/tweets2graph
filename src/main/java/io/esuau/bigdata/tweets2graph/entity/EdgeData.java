@@ -10,11 +10,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "edges")
+@Table(name = "edges", schema = "graph")
 public class EdgeData {
 
     @Id
-    @GeneratedValue(generator = "uuid")
     @Column(name = "id")
     private String id;
 
