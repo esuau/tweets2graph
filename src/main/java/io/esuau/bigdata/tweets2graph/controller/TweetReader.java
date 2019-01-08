@@ -1,6 +1,6 @@
-package io.esuau.bigdata.twitter2graph.controller;
+package io.esuau.bigdata.tweets2graph.controller;
 
-import io.esuau.bigdata.twitter2graph.operation.TweetProcessor;
+import io.esuau.bigdata.tweets2graph.operation.TweetProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

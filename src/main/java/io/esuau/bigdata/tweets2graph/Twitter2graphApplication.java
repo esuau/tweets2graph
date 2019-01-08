@@ -1,6 +1,6 @@
-package io.esuau.bigdata.twitter2graph;
+package io.esuau.bigdata.tweets2graph;
 
-import io.esuau.bigdata.twitter2graph.controller.TweetReader;
+import io.esuau.bigdata.tweets2graph.controller.TweetReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

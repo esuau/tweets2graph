@@ -1,4 +1,4 @@
-package io.esuau.bigdata.twitter2graph.entity;
+package io.esuau.bigdata.tweets2graph.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,9 +1,9 @@
-package io.esuau.bigdata.twitter2graph.operation;
+package io.esuau.bigdata.tweets2graph.operation;
 
-import io.esuau.bigdata.twitter2graph.entity.EdgeData;
-import io.esuau.bigdata.twitter2graph.entity.NodeData;
-import io.esuau.bigdata.twitter2graph.repository.EdgeRepository;
-import io.esuau.bigdata.twitter2graph.repository.NodeRepository;
+import io.esuau.bigdata.tweets2graph.entity.EdgeData;
+import io.esuau.bigdata.tweets2graph.entity.NodeData;
+import io.esuau.bigdata.tweets2graph.repository.EdgeRepository;
+import io.esuau.bigdata.tweets2graph.repository.NodeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

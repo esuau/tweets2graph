@@ -1,4 +1,4 @@
-package io.esuau.bigdata.twitter2graph;
+package io.esuau.bigdata.tweets2graph;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

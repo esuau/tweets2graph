@@ -1,6 +1,6 @@
-package io.esuau.bigdata.twitter2graph.repository;
+package io.esuau.bigdata.tweets2graph.repository;
 
-import io.esuau.bigdata.twitter2graph.entity.EdgeData;
+import io.esuau.bigdata.tweets2graph.entity.EdgeData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
