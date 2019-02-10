@@ -54,8 +54,10 @@ public class TweetProcessor {
             } else if (status.getQuotedStatus() != null) {
                 referencedUser = status.getQuotedStatus().getUser();
             }
-            if (referencedUser != null && !nodeRepository.existsById(String.valueOf(referencedUser.getId()))) {
-                this.createNode(referencedUser);
+            if (referencedUser != null) {
+                if (!nodeRepository.existsById(String.valueOf(referencedUser.getId()))) {
+                    this.createNode(referencedUser);
+                }
                 createEdge(user.getId(), referencedUser.getId());
             }
         }
