@@ -1,5 +1,6 @@
 package io.esuau.bigdata.tweets2graph;
 
+import io.esuau.bigdata.tweets2graph.controller.GraphWriter;
 import io.esuau.bigdata.tweets2graph.controller.TweetReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -26,6 +27,9 @@ public class Twitter2graphApplication {
 
 		TweetReader tweetReader = (TweetReader) ctx.getBean("tweetReader");
 		tweetReader.readFile(file);
+
+		GraphWriter graphWriter = (GraphWriter) ctx.getBean("graphWriter");
+		graphWriter.write();
 	}
 
 }
