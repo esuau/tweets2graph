@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.io.File;
+
 @Slf4j
 @Controller
 public class GraphWriter {
@@ -17,8 +19,8 @@ public class GraphWriter {
         this.graphExtractor = graphExtractor;
     }
 
-    public void write() {
-        graphExtractor.export().addCallback(new ListenableFutureCallback<Boolean>() {
+    public void write(File output) {
+        graphExtractor.export(output).addCallback(new ListenableFutureCallback<Boolean>() {
             public void onSuccess(Boolean explosion) {
                 log.info("Success.");
             }
