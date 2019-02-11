@@ -19,6 +19,7 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -39,8 +40,8 @@ public class GraphExtractor {
     }
 
     @Async
-    public ListenableFuture<Boolean> export() {
-        try (FileOutputStream out = new FileOutputStream("export.json")) {
+    public ListenableFuture<Boolean> export(File output) {
+        try (FileOutputStream out = new FileOutputStream(output)) {
 
             StopWatch stopwatch = StopWatch.createStarted();
 
