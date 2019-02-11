@@ -75,7 +75,7 @@ public class GraphExtractor {
             }
 
             stopwatch.stop();
-            log.info("Exporting took {} seconds", stopwatch.getTime(TimeUnit.SECONDS));
+            log.info("Exporting took {} seconds", stopwatch.getTime(TimeUnit.MILLISECONDS));
 
             return AsyncResult.forValue(true);
         } catch (Exception ex) {
