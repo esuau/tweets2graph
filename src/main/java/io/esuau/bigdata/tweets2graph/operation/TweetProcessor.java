@@ -7,10 +7,7 @@ import io.esuau.bigdata.tweets2graph.repository.NodeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import twitter4j.Status;
-import twitter4j.TwitterException;
-import twitter4j.TwitterObjectFactory;
-import twitter4j.User;
+import twitter4j.*;
 
 import javax.transaction.Transactional;
 import java.util.UUID;
@@ -61,8 +58,16 @@ public class TweetProcessor {
                 createEdge(user.getId(), referencedUser.getId());
             }
         }
-        if (status.getInReplyToUserId() > 0L) {
-            createEdge(user.getId(), status.getInReplyToUserId());
+        if (status.getUserMentionEntities() != null && status.getUserMentionEntities().length > 0) {
+            for (UserMentionEntity userMentionEntity : status.getUserMentionEntities()) {
+                if (!nodeRepository.existsById(String.valueOf(userMentionEntity.getId()))) {
+                    NodeData nodeData = new NodeData();
+                    nodeData.setId(String.valueOf(userMentionEntity.getId()));
+                    nodeData.setName(userMentionEntity.getName());
+                    nodeRepository.save(nodeData);
+                }
+                createEdge(user.getId(), userMentionEntity.getId());
+            }
         }
     }
 
@@ -70,7 +75,6 @@ public class TweetProcessor {
         NodeData nodeData = new NodeData();
         nodeData.setId(String.valueOf(user.getId()));
         nodeData.setName(user.getName());
-        nodeData.setScore(user.getFollowersCount() / 100000.0);
         nodeRepository.save(nodeData);
     }
 
