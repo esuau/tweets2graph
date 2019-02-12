@@ -86,8 +86,10 @@ public class TweetProcessor {
     }
 
     private void createEdge(long sourceUserId, long targetUserId) {
-        EdgeData edgeData = new EdgeData(UUID.randomUUID().toString(), String.valueOf(sourceUserId), String.valueOf(targetUserId), 0.5);
-        edgeRepository.save(edgeData);
+        if (sourceUserId != targetUserId && !edgeRepository.existsEdgeDataBySourceAndTarget(String.valueOf(sourceUserId), String.valueOf(targetUserId))) {
+            EdgeData edgeData = new EdgeData(UUID.randomUUID().toString(), String.valueOf(sourceUserId), String.valueOf(targetUserId), 0.5);
+            edgeRepository.save(edgeData);
+        }
     }
 
 }
