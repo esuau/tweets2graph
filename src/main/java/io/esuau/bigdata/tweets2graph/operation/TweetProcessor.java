@@ -7,10 +7,7 @@ import io.esuau.bigdata.tweets2graph.repository.NodeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import twitter4j.Status;
-import twitter4j.TwitterException;
-import twitter4j.TwitterObjectFactory;
-import twitter4j.User;
+import twitter4j.*;
 
 import javax.transaction.Transactional;
 import java.util.UUID;
@@ -43,9 +40,7 @@ public class TweetProcessor {
 
     private void processTweet(Status status) {
         User user = status.getUser();
-        if (!nodeRepository.existsById(String.valueOf(user.getId()))) {
-            this.createNode(user);
-        }
+        this.createNode(user);
 
         if (status.isRetweet() || status.getQuotedStatus() != null) {
             User referencedUser = null;
@@ -55,28 +50,46 @@ public class TweetProcessor {
                 referencedUser = status.getQuotedStatus().getUser();
             }
             if (referencedUser != null) {
-                if (!nodeRepository.existsById(String.valueOf(referencedUser.getId()))) {
-                    this.createNode(referencedUser);
-                }
+                this.createNode(referencedUser);
                 createEdge(user.getId(), referencedUser.getId());
             }
         }
-        if (status.getInReplyToUserId() > 0L) {
-            createEdge(user.getId(), status.getInReplyToUserId());
+        if (status.getUserMentionEntities() != null && status.getUserMentionEntities().length > 0) {
+            for (UserMentionEntity userMentionEntity : status.getUserMentionEntities()) {
+                createNode(userMentionEntity);
+                createEdge(user.getId(), userMentionEntity.getId());
+            }
         }
     }
 
     private void createNode(User user) {
-        NodeData nodeData = new NodeData();
-        nodeData.setId(String.valueOf(user.getId()));
-        nodeData.setName(user.getName());
-        nodeData.setScore(user.getFollowersCount() / 100000.0);
-        nodeRepository.save(nodeData);
+        if (!nodeRepository.existsById(String.valueOf(user.getId()))) {
+            NodeData nodeData = new NodeData();
+            nodeData.setId(String.valueOf(user.getId()));
+            nodeData.setName(user.getName());
+            nodeData.setScore(user.getFollowersCount());
+            nodeRepository.save(nodeData);
+        } else {
+            if (nodeRepository.getOne(String.valueOf(user.getId())).getScore() == 0) {
+                nodeRepository.setScore(String.valueOf(user.getId()), user.getFollowersCount());
+            }
+        }
+    }
+
+    private void createNode(UserMentionEntity user) {
+        if (!nodeRepository.existsById(String.valueOf(user.getId()))) {
+            NodeData nodeData = new NodeData();
+            nodeData.setId(String.valueOf(user.getId()));
+            nodeData.setName(user.getName());
+            nodeRepository.save(nodeData);
+        }
     }
 
     private void createEdge(long sourceUserId, long targetUserId) {
-        EdgeData edgeData = new EdgeData(UUID.randomUUID().toString(), String.valueOf(sourceUserId), String.valueOf(targetUserId), 0.5);
-        edgeRepository.save(edgeData);
+        if (sourceUserId != targetUserId && !edgeRepository.existsEdgeDataBySourceAndTarget(String.valueOf(sourceUserId), String.valueOf(targetUserId))) {
+            EdgeData edgeData = new EdgeData(UUID.randomUUID().toString(), String.valueOf(sourceUserId), String.valueOf(targetUserId), 0.5);
+            edgeRepository.save(edgeData);
+        }
     }
 
 }
