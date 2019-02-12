@@ -40,9 +40,7 @@ public class TweetProcessor {
 
     private void processTweet(Status status) {
         User user = status.getUser();
-        if (!nodeRepository.existsById(String.valueOf(user.getId()))) {
-            this.createNode(user);
-        }
+        this.createNode(user);
 
         if (status.isRetweet() || status.getQuotedStatus() != null) {
             User referencedUser = null;
@@ -52,30 +50,39 @@ public class TweetProcessor {
                 referencedUser = status.getQuotedStatus().getUser();
             }
             if (referencedUser != null) {
-                if (!nodeRepository.existsById(String.valueOf(referencedUser.getId()))) {
-                    this.createNode(referencedUser);
-                }
+                this.createNode(referencedUser);
                 createEdge(user.getId(), referencedUser.getId());
             }
         }
         if (status.getUserMentionEntities() != null && status.getUserMentionEntities().length > 0) {
             for (UserMentionEntity userMentionEntity : status.getUserMentionEntities()) {
-                if (!nodeRepository.existsById(String.valueOf(userMentionEntity.getId()))) {
-                    NodeData nodeData = new NodeData();
-                    nodeData.setId(String.valueOf(userMentionEntity.getId()));
-                    nodeData.setName(userMentionEntity.getName());
-                    nodeRepository.save(nodeData);
-                }
+                createNode(userMentionEntity);
                 createEdge(user.getId(), userMentionEntity.getId());
             }
         }
     }
 
     private void createNode(User user) {
-        NodeData nodeData = new NodeData();
-        nodeData.setId(String.valueOf(user.getId()));
-        nodeData.setName(user.getName());
-        nodeRepository.save(nodeData);
+        if (!nodeRepository.existsById(String.valueOf(user.getId()))) {
+            NodeData nodeData = new NodeData();
+            nodeData.setId(String.valueOf(user.getId()));
+            nodeData.setName(user.getName());
+            nodeData.setScore(user.getFollowersCount());
+            nodeRepository.save(nodeData);
+        } else {
+            if (nodeRepository.getOne(String.valueOf(user.getId())).getScore() == 0) {
+                nodeRepository.setScore(String.valueOf(user.getId()), user.getFollowersCount());
+            }
+        }
+    }
+
+    private void createNode(UserMentionEntity user) {
+        if (!nodeRepository.existsById(String.valueOf(user.getId()))) {
+            NodeData nodeData = new NodeData();
+            nodeData.setId(String.valueOf(user.getId()));
+            nodeData.setName(user.getName());
+            nodeRepository.save(nodeData);
+        }
     }
 
     private void createEdge(long sourceUserId, long targetUserId) {
