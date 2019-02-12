@@ -52,7 +52,7 @@ public class GraphExtractor {
 
                 int edgePage = 0;
                 while (true) {
-                    Pageable pageable = new PageRequest(edgePage++, 100);
+                    Pageable pageable = PageRequest.of(edgePage++, 100);
                     List<EdgeData> batch = edgeRepository.findAll(pageable).getContent();
                     for (EdgeData edgeData : batch) {
                         sequenceWriter.write(new Edge(edgeData));
@@ -63,7 +63,7 @@ public class GraphExtractor {
                 }
                 int nodePage = 0;
                 while (true) {
-                    Pageable pageable = new PageRequest(nodePage++, 100);
+                    Pageable pageable = PageRequest.of(nodePage++, 100);
                     List<NodeData> batch = nodeRepository.findAll(pageable).getContent();
                     for (NodeData nodeData : batch) {
                         sequenceWriter.write(new Node(nodeData));
