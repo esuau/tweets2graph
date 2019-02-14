@@ -51,43 +51,43 @@ public class TweetProcessor {
             }
             if (referencedUser != null) {
                 this.createNode(referencedUser);
-                createEdge(user.getId(), referencedUser.getId());
+                createEdge(user.getScreenName(), referencedUser.getScreenName());
             }
         }
         if (status.getUserMentionEntities() != null && status.getUserMentionEntities().length > 0) {
             for (UserMentionEntity userMentionEntity : status.getUserMentionEntities()) {
                 createNode(userMentionEntity);
-                createEdge(user.getId(), userMentionEntity.getId());
+                createEdge(user.getScreenName(), userMentionEntity.getScreenName());
             }
         }
     }
 
     private void createNode(User user) {
-        if (!nodeRepository.existsById(String.valueOf(user.getId()))) {
+        if (!nodeRepository.existsById(user.getScreenName())) {
             NodeData nodeData = new NodeData();
-            nodeData.setId(String.valueOf(user.getId()));
+            nodeData.setId(user.getScreenName());
             nodeData.setName(user.getName());
             nodeData.setScore(user.getFollowersCount());
             nodeRepository.save(nodeData);
         } else {
-            if (nodeRepository.getOne(String.valueOf(user.getId())).getScore() == 0) {
-                nodeRepository.setScore(String.valueOf(user.getId()), user.getFollowersCount());
+            if (nodeRepository.getOne(user.getScreenName()).getScore() == 0) {
+                nodeRepository.setScore(user.getScreenName(), user.getFollowersCount());
             }
         }
     }
 
     private void createNode(UserMentionEntity user) {
-        if (!nodeRepository.existsById(String.valueOf(user.getId()))) {
+        if (!nodeRepository.existsById(user.getScreenName())) {
             NodeData nodeData = new NodeData();
-            nodeData.setId(String.valueOf(user.getId()));
+            nodeData.setId(user.getScreenName());
             nodeData.setName(user.getName());
             nodeRepository.save(nodeData);
         }
     }
 
-    private void createEdge(long sourceUserId, long targetUserId) {
-        if (sourceUserId != targetUserId && !edgeRepository.existsEdgeDataBySourceAndTarget(String.valueOf(sourceUserId), String.valueOf(targetUserId))) {
-            EdgeData edgeData = new EdgeData(UUID.randomUUID().toString(), String.valueOf(sourceUserId), String.valueOf(targetUserId), 0.5);
+    private void createEdge(String sourceUserId, String targetUserId) {
+        if (!sourceUserId.equals(targetUserId) && !edgeRepository.existsEdgeDataBySourceAndTarget(sourceUserId, targetUserId)) {
+            EdgeData edgeData = new EdgeData(UUID.randomUUID().toString(), sourceUserId, targetUserId, 0.5);
             edgeRepository.save(edgeData);
         }
     }
